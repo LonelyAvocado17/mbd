@@ -1,0 +1,120 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  
+  body {
+    background: #000;
+    color: #fff;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .app {
+    max-width: 430px;
+    height: 100vh;
+    margin: auto;
+    position: relative;
+    background: radial-gradient(circle at top, #1a1a1a, #000);
+  }
+  
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 24px;
+  }
+  
+  .screen.active {
+    display: flex;
+  }
+  
+  .center {
+    animation: fadeUp 0.8s ease;
+  }
+  
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .glitch {
+    font-size: 3.2rem;
+    letter-spacing: 2px;
+  }
+  
+  .tap {
+    margin-top: 16px;
+    opacity: 0.6;
+    font-size: 1rem;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+    line-height: 1.4;
+  }
+  
+  .title span {
+    color: #7f5cff;
+  }
+  
+  .title strong {
+    font-size: 3.5rem;
+    display: inline-block;
+  }
+  
+  .small {
+    font-size: 1.2rem;
+  }
+  
+  .btn {
+    margin-top: 28px;
+    padding: 14px 28px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #7f5cff, #00d4ff);
+    color: #000;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .btn:active {
+    transform: scale(0.96);
+  }
+  
+  .btn.ghost {
+    background: transparent;
+    color: #fff;
+    border: 1px solid #555;
+  }
+  
+  .big {
+    font-size: 2.8rem;
+  }
+  
+  .line {
+    margin-top: 12px;
+    opacity: 0.8;
+  }
+  .memory-pic {
+    margin-top: 18px;
+    width: 100%;
+    max-width: 260px;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    animation: fadeUp 0.9s ease;
+  }
+  
+  
+  canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  

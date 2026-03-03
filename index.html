@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>big dawg</title>
+
+<style>
+body{
+    margin:0;
+    background:black;
+    color:white;
+    font-family:Arial, sans-serif;
+    overflow:hidden;
+}
+
+/* Screens */
+.screen{
+    position:fixed;
+    width:100vw;
+    height:100vh;
+}
+
+.center{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+.hidden{ display:none; }
+
+input, textarea{
+    width:80%;
+    padding:12px;
+    border-radius:25px;
+    border:none;
+    margin-top:10px;
+    font-size:16px;
+}
+
+button{
+    margin-top:15px;
+    padding:10px 25px;
+    border-radius:25px;
+    border:none;
+    background:white;
+    cursor:pointer;
+}
+
+.secondary{ background:gray }
+
+#textDisplay{
+    position:absolute;
+    top:40%;
+    width:100%;
+    text-align:center;
+    font-size:22px;
+    padding:0 20px;
+}
+
+/* Running Cat */
+.runningCat{
+    position:absolute;
+    width:90px;
+    animation:runCat 25s linear infinite;
+    top:10%;
+}
+
+@keyframes runCat{
+    from{ left:-150px; }
+    to{ left:110%; }
+}
+
+/* Floating Cats */
+.cat{
+    position:absolute;
+    width:80px;
+    opacity:0.9;
+    animation:floatCat linear infinite;
+}
+
+@keyframes floatCat{
+    0%{ transform:translateY(0px); }
+    50%{ transform:translateY(-20px); }
+    100%{ transform:translateY(0px); }
+}
+
+/* Her Video */
+.herVideo{
+    position:absolute;
+    width:40%;
+    left:50%;
+    top:40%;
+    transform:translate(-50%,-50%);
+    z-index:5;
+}
+
+/* Chaos text beneath her video */
+#chaosText{
+    position:absolute;
+    top:60%;
+    width:100%;
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+    color:yellow;
+}
+
+/* Flash chaos effect */
+.flash{
+    position:fixed;
+    width:100vw;
+    height:100vh;
+    background:white;
+    opacity:0;
+    pointer-events:none;
+    animation:flashAnim 0.2s linear infinite;
+}
+
+@keyframes flashAnim{
+    0%{ opacity:0; }
+    50%{ opacity:0.08; }
+    100%{ opacity:0; }
+}
+
+/* Confetti */
+.confetti{
+    position:absolute;
+    width:10px;
+    height:10px;
+    background:yellow;
+    pointer-events:none;
+    opacity:0.9;
+    border-radius:50%;
+    animation:fall 3s linear infinite;
+}
+
+@keyframes fall{
+    0%{ transform:translateY(0px) rotate(0deg); }
+    100%{ transform:translateY(100vh) rotate(360deg); }
+}
+
+/* CONFESSION TEXT */
+#confession{
+    position:absolute;
+    top:10%;
+    left:50%;
+    transform:translateX(-50%);
+    width:80%;
+    max-width:600px;
+    text-align:left;
+    font-size:20px;
+    line-height:1.5;
+    background:rgba(255,255,255,0.1);
+    padding:20px;
+    border-radius:15px;
+    color:#fff;
+    white-space:pre-wrap;
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+<audio id="tap" src="tap.mp3"></audio>
+<audio id="meme" src="meme.mp3"></audio>
+<audio id="buri" src="buri.mp3"></audio>
+
+<!-- SECRET MENU -->
+<div id="secretMenu" class="screen center">
+    <h2>Access secret menu?</h2>
+    <input type="password" id="codeInput" placeholder="Enter code">
+    <button onclick="checkCode()">Enter</button>
+    <button class="secondary" onclick="startMain()">Continue without the code</button>
+</div>
+
+<!-- MAIN SCENE -->
+<div id="scene1" class="screen hidden">
+    <div id="textDisplay"></div>
+</div>
+
+<!-- CONFESSION SCREEN -->
+<div id="confessionScreen" class="screen hidden center">
+    <div id="confession"></div>
+</div>
+
+<script>
+function play(id){
+    let s=document.getElementById(id);
+    s.currentTime=0;
+    s.play();
+}
+
+function stop(id){
+    let s=document.getElementById(id);
+    s.pause();
+    s.currentTime=0;
+}
+
+function checkCode(){
+    play("tap");
+    const code = document.getElementById("codeInput").value.trim().toLowerCase();
+    if(code==="labubu"){
+        showConfession();
+    }else{
+        startMain();
+    }
+}
+
+function startMain(){
+    play("tap");
+    document.getElementById("secretMenu").classList.add("hidden");
+    document.getElementById("scene1").classList.remove("hidden");
+    startTimeline();
+}
+
+function startTimeline(){
+    let text=document.getElementById("textDisplay");
+    let years=20; 
+    let seconds=years*365*24*60*60;
+
+    text.innerText=`Now, you have been alive for ${years} years...`;
+    setTimeout(()=>{
+        text.innerText=`That is ${seconds.toLocaleString()} seconds...`;
+    },3000);
+
+    setTimeout(()=>{
+        text.innerText="";
+        startChaos(); // jump directly to chaos
+    },6000);
+}
+
+function startChaos(){
+    const scene=document.getElementById("scene1");
+
+    // --- Play sounds ---
+    play("meme");
+    play("buri");
+
+    // --- Running Cat ---
+    let run=document.createElement("img");
+    run.src="pixelcat.gif";
+    run.className="runningCat";
+    scene.appendChild(run);
+
+    // --- Random Floating Cats ---
+    for(let i=0;i<=20;i++){
+        let cat=document.createElement("img");
+        cat.src=i%2===0?"pixelcat.gif":"vibing cat.gif";
+        cat.className="cat";
+        cat.style.left=Math.random()*90+"%";
+        cat.style.top=Math.random()*80+"%";
+        cat.style.animationDuration=(3+Math.random()*3)+"s";
+        scene.appendChild(cat);
+    }
+
+    // --- Smaller Video ---
+    let video=document.createElement("video");
+    video.src="mbd.mp4";
+    video.className="herVideo";
+    video.autoplay=true;
+    video.loop=true;
+    video.muted=true;
+    video.playbackRate=1.5;
+    scene.appendChild(video);
+
+    // --- Chaos text beneath video ---
+    let msg=document.createElement("div");
+    msg.id="chaosText";
+    scene.appendChild(msg);
+
+    const textContent="Okay It Was Kinda Cringe But I Had To Do It 😂";
+    let index=0;
+    let typing=setInterval(()=>{
+        msg.innerText+=textContent[index];
+        index++;
+        if(index>=textContent.length) clearInterval(typing);
+    },100);
+
+    // --- Flash effect ---
+    let flash=document.createElement("div");
+    flash.className="flash";
+    document.body.appendChild(flash);
+
+    // --- Confetti ---
+    const colors=["red","yellow","blue","green","orange","pink","purple"];
+    for(let i=0;i<50;i++){
+        let c=document.createElement("div");
+        c.className="confetti";
+        c.style.left=Math.random()*100+"%";
+        c.style.background=colors[Math.floor(Math.random()*colors.length)];
+        c.style.animationDuration=(2+Math.random()*3)+"s";
+        scene.appendChild(c);
+    }
+
+    // Stop chaos sounds a few seconds before scene ends
+    setTimeout(()=>{
+        stop("meme");
+        stop("buri");
+    },13000);
+
+    // End chaos after 15s
+    setTimeout(()=>{
+        scene.innerHTML="";
+        flash.remove();
+        startReflection();
+    },15000);
+}
+
+function startReflection(){
+    const scene=document.getElementById("scene1");
+    scene.style.background="#111";
+    const text=document.createElement("div");
+    text.style.position="absolute";
+    text.style.top="20%";
+    text.style.width="90%";
+    text.style.textAlign="center";
+    text.style.fontSize="22px";
+    text.style.color="white";
+    text.style.padding="0 20px";
+    text.innerText="But seriously…\nYou’re 20 now.\nYour teenage years are officially over.\n\nHow does that feel?";
+    scene.appendChild(text);
+}
+
+// --- CONFESSION ---
+function showConfession(){
+    document.getElementById("secretMenu").classList.add("hidden");
+    document.getElementById("confessionScreen").classList.remove("hidden");
+
+    const confessionText = `Good job on deciphering that Caesar cipher! Now that you’re here, I want to talk about something important.
+
+Shall I get straight to the point? Or keep yapping?
+We’ll go straight to the point…
+
+Would you like to be my girlfriend?
+I really enjoy talking to you...I could listen to you for hours. We always get the perfect kinda mindsync moments those are fun. Now,I know it would be long distance and that there might be some challenges, and I can’t promise everything will be perfect, but I will always try my best. I truly believe we can make it work if we both want to.
+
+Take all the time you need to decide. By the time you read this, I’ll probably be asleep, so I’d really appreciate it if you text me and let me know what you feel after reading. No rush just wanted to say this out.
+
+And… that’s it. Menu closed.`;
+
+    const confessionDiv = document.getElementById("confession");
+    let i=0;
+    const typeWriter = setInterval(()=>{
+        confessionDiv.innerText += confessionText[i];
+        i++;
+        if(i>=confessionText.length) clearInterval(typeWriter);
+    },35);
+}
+</script>
+
+</body>
+</html>
