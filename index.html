@@ -18,19 +18,18 @@ body{
     position:fixed;
     width:100vw;
     height:100vh;
-}
-
-.center{
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
     text-align:center;
+    padding:20px;
+    box-sizing:border-box;
 }
 
 .hidden{ display:none; }
 
-input, textarea{
+input{
     width:80%;
     padding:12px;
     border-radius:25px;
@@ -44,18 +43,19 @@ button{
     border-radius:25px;
     border:none;
     background:white;
+    color:black;
     cursor:pointer;
 }
 
-.secondary{ background:gray; }
+.secondary{ background:gray; color:white; }
 
-#textDisplay{
-    position:absolute;
-    top:40%;
-    width:100%;
-    text-align:center;
-    font-size:22px;
-    padding:0 20px;
+#secretText{
+    margin-top:20px;
+    max-width:90%;
+    text-align:left;
+    color:lightgreen;
+    white-space:pre-wrap;
+    overflow-wrap: break-word;
 }
 
 /* Running Cat */
@@ -163,12 +163,12 @@ button{
 <audio id="buri" src="buri.mp3"></audio>
 
 <!-- SECRET MENU -->
-<div id="secretMenu" class="screen center">
+<div id="secretMenu" class="screen">
     <h2>Access secret menu?</h2>
     <input type="password" id="codeInput" placeholder="Enter code">
     <button onclick="checkCode()">Enter</button>
     <button class="secondary" onclick="startMain()">Continue without code</button>
-    <div id="secretText" style="margin-top:20px; max-width:90%; text-align:center; color:lightgreen;"></div>
+    <div id="secretText"></div>
 </div>
 
 <!-- MAIN SCENE -->
@@ -187,42 +187,32 @@ assets.forEach(src=>{
 });
 
 // Play/pause functions
-function play(id){
-    let s=document.getElementById(id);
-    if(s){ s.currentTime=0; s.play(); }
-}
-function stop(id){
-    let s=document.getElementById(id);
-    if(s){ s.pause(); s.currentTime=0; }
-}
+function play(id){ let s=document.getElementById(id); if(s){ s.currentTime=0; s.play(); } }
+function stop(id){ let s=document.getElementById(id); if(s){ s.pause(); s.currentTime=0; } }
 
 // Secret code check
 function checkCode(){
     play("tap");
     let code = document.getElementById("codeInput").value.trim().toLowerCase();
     if(code==="labubu"){
-        showSecretText();
+        const secretDiv = document.getElementById("secretText");
+        secretDiv.innerText = `Good job on deciphering that Caesar cipher! Now that you’re here, I want to talk about something important.
+
+Shall I get straight to the point? Or keep yapping?
+We’ll go straight to the point…
+
+Would you like to be my girlfriend?
+I really enjoy talking to you...I could listen to you for hours. I admire your curiosity and sense of humor. I know it would be long distance and that there might be some challenges, and I can’t promise everything will be perfect, but I will always try my best. I truly believe we can make it work if we both want to.
+
+Take all the time you need to decide. By the time you read this, I’ll probably be asleep, so I’d really appreciate it if you text me and let me know what you feel after reading. No rush, just wanted to say this out.
+
+And… that’s it. Menu closed.`;
     } else {
         alert("Wrong code");
     }
 }
 
-// Secret text typewriter effect
-function showSecretText(){
-    const secretDiv = document.getElementById("secretText");
-    const text = `Good job on deciphering that Caesar cipher! Now that you’re here, I want to talk about something important.\n\nShall I get straight to the point? Or keep yapping?\nWe’ll go straight to the point…\n\nWould you like to be my girlfriend?\nI really enjoy talking to you...I could listen to you for hours. I admire your curiosity and sense of humor. I know it would be long distance and that there might be some challenges, and I can’t promise everything will be perfect, but I will always try my best. I truly believe we can make it work if we both want to.\n\nTake all the time you need to decide. By the time you read this, I’ll probably be asleep, so I’d really appreciate it if you text me and let me know what you feel after reading. No rush, just wanted to say this out.\n\nAnd… that’s it. Menu closed.`;
-
-    secretDiv.innerText="";
-    let i=0;
-    let typing = setInterval(()=>{
-        if(i<text.length){
-            secretDiv.innerText+=text[i];
-            i++;
-        } else clearInterval(typing);
-    },25);
-}
-
-// Start main scene if no code or wrong code
+// Skip secret menu
 function startMain(){
     play("tap");
     document.getElementById("secretMenu").classList.add("hidden");
@@ -237,27 +227,18 @@ function startTimeline(){
     let seconds=years*365*24*60*60;
 
     text.innerText=`Now, you have been alive for ${years} years...`;
-    setTimeout(()=>{
-        text.innerText=`That is ${seconds.toLocaleString()} seconds...`;
-    },3000);
-
-    setTimeout(()=>{
-        text.innerText="";
-        startChaos();
-    },6000);
+    setTimeout(()=>{ text.innerText=`That is ${seconds.toLocaleString()} seconds...`; },3000);
+    setTimeout(()=>{ text.innerText=""; startChaos(); },6000);
 }
 
 // Chaos function
 function startChaos(){
     const scene=document.getElementById("scene1");
-    play("meme");
-    play("buri");
+    play("meme"); play("buri");
 
     // Running cat
     let run=document.createElement("img");
-    run.src="pixelcat.gif";
-    run.className="runningCat";
-    scene.appendChild(run);
+    run.src="pixelcat.gif"; run.className="runningCat"; scene.appendChild(run);
 
     // Floating cats
     for(let i=0;i<20;i++){
@@ -272,31 +253,20 @@ function startChaos(){
 
     // Smaller video
     let video=document.createElement("video");
-    video.src="mbd.mp4";
-    video.className="herVideo";
-    video.autoplay=true;
-    video.loop=true;
-    video.muted=true;
-    video.playbackRate=1.5;
-    scene.appendChild(video);
+    video.src="mbd.mp4"; video.className="herVideo";
+    video.autoplay=true; video.loop=true; video.muted=true;
+    video.playbackRate=1.5; scene.appendChild(video);
 
     // Chaos text
-    let msg=document.createElement("div");
-    msg.id="chaosText";
-    scene.appendChild(msg);
+    let msg=document.createElement("div"); msg.id="chaosText"; scene.appendChild(msg);
     const chaosContent = "Okay It Was Kinda Cringe But I Had To Do It 😂";
-    let index=0;
-    let typing = setInterval(()=>{
-        if(index<chaosContent.length){
-            msg.innerText+=chaosContent[index];
-            index++;
-        } else clearInterval(typing);
+    let index=0; let typing = setInterval(()=>{
+        if(index<chaosContent.length){ msg.innerText+=chaosContent[index]; index++; }
+        else clearInterval(typing);
     },100);
 
-    // Flash effect
-    let flash=document.createElement("div");
-    flash.className="flash";
-    document.body.appendChild(flash);
+    // Flash
+    let flash=document.createElement("div"); flash.className="flash"; document.body.appendChild(flash);
 
     // Confetti
     const colors=["red","yellow","blue","green","orange","pink","purple"];
@@ -309,17 +279,8 @@ function startChaos(){
         scene.appendChild(c);
     }
 
-    // Stop sounds slightly before end
-    setTimeout(()=>{
-        stop("meme");
-        stop("buri");
-    },13000);
-
-    // Remove chaos after 15s
-    setTimeout(()=>{
-        scene.innerHTML="";
-        flash.remove();
-    },15000);
+    setTimeout(()=>{ stop("meme"); stop("buri"); },13000);
+    setTimeout(()=>{ scene.innerHTML=""; flash.remove(); },15000);
 }
 </script>
 
