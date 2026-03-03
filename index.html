@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>big dawg</title>
+<title>Big Dawg</title>
 
 <style>
 body{
@@ -36,7 +36,6 @@ input, textarea{
     border-radius:25px;
     border:none;
     margin-top:10px;
-    font-size:16px;
 }
 
 button{
@@ -48,7 +47,7 @@ button{
     cursor:pointer;
 }
 
-.secondary{ background:gray }
+.secondary{ background:gray; }
 
 #textDisplay{
     position:absolute;
@@ -100,11 +99,18 @@ button{
 #chaosText{
     position:absolute;
     top:60%;
-    width:100%;
+    left:50%;
+    transform:translateX(-50%);
+    width:90%;
+    max-width:500px;
     text-align:center;
-    font-size:24px;
+    font-size:22px;
     font-weight:bold;
     color:yellow;
+    padding:10px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 /* Flash chaos effect */
@@ -129,11 +135,10 @@ button{
     position:absolute;
     width:10px;
     height:10px;
-    background:yellow;
     pointer-events:none;
     opacity:0.9;
     border-radius:50%;
-    animation:fall 3s linear infinite;
+    animation:fall linear infinite;
 }
 
 @keyframes fall{
@@ -141,22 +146,11 @@ button{
     100%{ transform:translateY(100vh) rotate(360deg); }
 }
 
-/* CONFESSION TEXT */
-#confession{
-    position:absolute;
-    top:10%;
-    left:50%;
-    transform:translateX(-50%);
-    width:80%;
-    max-width:600px;
-    text-align:left;
-    font-size:20px;
-    line-height:1.5;
-    background:rgba(255,255,255,0.1);
-    padding:20px;
-    border-radius:15px;
-    color:#fff;
-    white-space:pre-wrap;
+/* Mobile font adjustment */
+@media screen and (max-width: 400px){
+    #chaosText{
+        font-size:18px;
+    }
 }
 </style>
 </head>
@@ -173,7 +167,8 @@ button{
     <h2>Access secret menu?</h2>
     <input type="password" id="codeInput" placeholder="Enter code">
     <button onclick="checkCode()">Enter</button>
-    <button class="secondary" onclick="startMain()">Continue without the code</button>
+    <button class="secondary" onclick="startMain()">Continue without code</button>
+    <div id="secretText" style="margin-top:20px; max-width:90%; text-align:center; color:lightgreen;"></div>
 </div>
 
 <!-- MAIN SCENE -->
@@ -181,34 +176,53 @@ button{
     <div id="textDisplay"></div>
 </div>
 
-<!-- CONFESSION SCREEN -->
-<div id="confessionScreen" class="screen hidden center">
-    <div id="confession"></div>
-</div>
-
 <script>
+// Preload media
+const assets = ["tap.mp3","meme.mp3","buri.mp3","pixelcat.gif","vibing cat.gif","mbd.mp4"];
+assets.forEach(src=>{
+    let media;
+    if(src.endsWith(".mp4")) media = document.createElement("video");
+    else media = new Audio();
+    media.src = src;
+});
+
+// Play/pause functions
 function play(id){
     let s=document.getElementById(id);
-    s.currentTime=0;
-    s.play();
+    if(s){ s.currentTime=0; s.play(); }
 }
-
 function stop(id){
     let s=document.getElementById(id);
-    s.pause();
-    s.currentTime=0;
+    if(s){ s.pause(); s.currentTime=0; }
 }
 
+// Secret code check
 function checkCode(){
     play("tap");
-    const code = document.getElementById("codeInput").value.trim().toLowerCase();
+    let code = document.getElementById("codeInput").value.trim().toLowerCase();
     if(code==="labubu"){
-        showConfession();
-    }else{
-        startMain();
+        showSecretText();
+    } else {
+        alert("Wrong code");
     }
 }
 
+// Secret text typewriter effect
+function showSecretText(){
+    const secretDiv = document.getElementById("secretText");
+    const text = `Good job on deciphering that Caesar cipher! Now that you’re here, I want to talk about something important.\n\nShall I get straight to the point? Or keep yapping?\nWe’ll go straight to the point…\n\nWould you like to be my girlfriend?\nI really enjoy talking to you...I could listen to you for hours. I admire your curiosity and sense of humor. I know it would be long distance and that there might be some challenges, and I can’t promise everything will be perfect, but I will always try my best. I truly believe we can make it work if we both want to.\n\nTake all the time you need to decide. By the time you read this, I’ll probably be asleep, so I’d really appreciate it if you text me and let me know what you feel after reading. No rush, just wanted to say this out.\n\nAnd… that’s it. Menu closed.`;
+
+    secretDiv.innerText="";
+    let i=0;
+    let typing = setInterval(()=>{
+        if(i<text.length){
+            secretDiv.innerText+=text[i];
+            i++;
+        } else clearInterval(typing);
+    },25);
+}
+
+// Start main scene if no code or wrong code
 function startMain(){
     play("tap");
     document.getElementById("secretMenu").classList.add("hidden");
@@ -216,9 +230,10 @@ function startMain(){
     startTimeline();
 }
 
+// Timeline before chaos
 function startTimeline(){
     let text=document.getElementById("textDisplay");
-    let years=20; 
+    let years=20;
     let seconds=years*365*24*60*60;
 
     text.innerText=`Now, you have been alive for ${years} years...`;
@@ -228,25 +243,24 @@ function startTimeline(){
 
     setTimeout(()=>{
         text.innerText="";
-        startChaos(); // jump directly to chaos
+        startChaos();
     },6000);
 }
 
+// Chaos function
 function startChaos(){
     const scene=document.getElementById("scene1");
-
-    // --- Play sounds ---
     play("meme");
     play("buri");
 
-    // --- Running Cat ---
+    // Running cat
     let run=document.createElement("img");
     run.src="pixelcat.gif";
     run.className="runningCat";
     scene.appendChild(run);
 
-    // --- Random Floating Cats ---
-    for(let i=0;i<=20;i++){
+    // Floating cats
+    for(let i=0;i<20;i++){
         let cat=document.createElement("img");
         cat.src=i%2===0?"pixelcat.gif":"vibing cat.gif";
         cat.className="cat";
@@ -256,7 +270,7 @@ function startChaos(){
         scene.appendChild(cat);
     }
 
-    // --- Smaller Video ---
+    // Smaller video
     let video=document.createElement("video");
     video.src="mbd.mp4";
     video.className="herVideo";
@@ -266,25 +280,25 @@ function startChaos(){
     video.playbackRate=1.5;
     scene.appendChild(video);
 
-    // --- Chaos text beneath video ---
+    // Chaos text
     let msg=document.createElement("div");
     msg.id="chaosText";
     scene.appendChild(msg);
-
-    const textContent="Okay It Was Kinda Cringe But I Had To Do It 😂";
+    const chaosContent = "Okay It Was Kinda Cringe But I Had To Do It 😂";
     let index=0;
-    let typing=setInterval(()=>{
-        msg.innerText+=textContent[index];
-        index++;
-        if(index>=textContent.length) clearInterval(typing);
+    let typing = setInterval(()=>{
+        if(index<chaosContent.length){
+            msg.innerText+=chaosContent[index];
+            index++;
+        } else clearInterval(typing);
     },100);
 
-    // --- Flash effect ---
+    // Flash effect
     let flash=document.createElement("div");
     flash.className="flash";
     document.body.appendChild(flash);
 
-    // --- Confetti ---
+    // Confetti
     const colors=["red","yellow","blue","green","orange","pink","purple"];
     for(let i=0;i<50;i++){
         let c=document.createElement("div");
@@ -295,59 +309,17 @@ function startChaos(){
         scene.appendChild(c);
     }
 
-    // Stop chaos sounds a few seconds before scene ends
+    // Stop sounds slightly before end
     setTimeout(()=>{
         stop("meme");
         stop("buri");
     },13000);
 
-    // End chaos after 15s
+    // Remove chaos after 15s
     setTimeout(()=>{
         scene.innerHTML="";
         flash.remove();
-        startReflection();
     },15000);
-}
-
-function startReflection(){
-    const scene=document.getElementById("scene1");
-    scene.style.background="#111";
-    const text=document.createElement("div");
-    text.style.position="absolute";
-    text.style.top="20%";
-    text.style.width="90%";
-    text.style.textAlign="center";
-    text.style.fontSize="22px";
-    text.style.color="white";
-    text.style.padding="0 20px";
-    text.innerText="But seriously…\nYou’re 20 now.\nYour teenage years are officially over.\n\nHow does that feel?";
-    scene.appendChild(text);
-}
-
-// --- CONFESSION ---
-function showConfession(){
-    document.getElementById("secretMenu").classList.add("hidden");
-    document.getElementById("confessionScreen").classList.remove("hidden");
-
-    const confessionText = `Good job on deciphering that Caesar cipher! Now that you’re here, I want to talk about something important.
-
-Shall I get straight to the point? Or keep yapping?
-We’ll go straight to the point…
-
-Would you like to be my girlfriend?
-I really enjoy talking to you...I could listen to you for hours. We always get the perfect kinda mindsync moments those are fun. Now,I know it would be long distance and that there might be some challenges, and I can’t promise everything will be perfect, but I will always try my best. I truly believe we can make it work if we both want to.
-
-Take all the time you need to decide. By the time you read this, I’ll probably be asleep, so I’d really appreciate it if you text me and let me know what you feel after reading. No rush just wanted to say this out.
-
-And… that’s it. Menu closed.`;
-
-    const confessionDiv = document.getElementById("confession");
-    let i=0;
-    const typeWriter = setInterval(()=>{
-        confessionDiv.innerText += confessionText[i];
-        i++;
-        if(i>=confessionText.length) clearInterval(typeWriter);
-    },35);
 }
 </script>
 
