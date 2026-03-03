@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Big Dawg</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>big dawg</title>
 
 <style>
 body{
@@ -13,104 +13,159 @@ body{
     overflow:hidden;
 }
 
+/* Loading Screen */
+#loadingScreen {
+    position:fixed;
+    width:100vw;
+    height:100vh;
+    background:black;
+    z-index:1000;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.loader {
+    border:5px solid #333;
+    border-top:5px solid white;
+    border-radius:50%;
+    width:50px;
+    height:50px;
+    animation:spin 1s linear infinite;
+    margin-bottom:20px;
+}
+
+.progress-bar {
+    width:200px;
+    height:10px;
+    background:#333;
+    border-radius:5px;
+    margin-top:20px;
+    overflow:hidden;
+}
+
+.progress-fill {
+    height:100%;
+    background:white;
+    width:0%;
+    transition:width 0.3s;
+}
+
+@keyframes spin {
+    0% { transform:rotate(0deg); }
+    100% { transform:rotate(360deg); }
+}
+
 /* Screens */
 .screen{
     position:fixed;
     width:100vw;
     height:100vh;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+}
+
+.center{
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
     text-align:center;
+    min-height:100vh;
     padding:20px;
     box-sizing:border-box;
 }
 
-.hidden{ display:none; }
+.hidden{ display:none !important; }
 
-input{
+input, textarea{
     width:80%;
-    padding:12px;
+    max-width:300px;
+    padding:15px;
     border-radius:25px;
     border:none;
     margin-top:10px;
+    font-size:16px;
+    -webkit-appearance:none;
 }
 
 button{
     margin-top:15px;
-    padding:10px 25px;
+    padding:12px 30px;
     border-radius:25px;
     border:none;
     background:white;
-    color:black;
     cursor:pointer;
+    font-size:16px;
+    -webkit-appearance:none;
 }
 
-.secondary{ background:gray; color:white; }
+.secondary{ background:#666; color:white; }
 
-#secretText{
-    margin-top:20px;
-    max-width:90%;
-    text-align:left;
-    color:lightgreen;
-    white-space:pre-wrap;
-    overflow-wrap: break-word;
+#textDisplay{
+    position:absolute;
+    top:40%;
+    width:100%;
+    text-align:center;
+    font-size:22px;
+    padding:0 20px;
+    box-sizing:border-box;
 }
 
 /* Running Cat */
 .runningCat{
     position:absolute;
-    width:90px;
-    animation:runCat 25s linear infinite;
+    width:70px;
+    animation:runCat 20s linear infinite;
     top:10%;
+    z-index:10;
 }
 
 @keyframes runCat{
-    from{ left:-150px; }
-    to{ left:110%; }
+    from{ left:-100px; }
+    to{ left:100%; }
 }
 
 /* Floating Cats */
 .cat{
     position:absolute;
-    width:80px;
+    width:60px;
     opacity:0.9;
     animation:floatCat linear infinite;
+    z-index:5;
 }
 
 @keyframes floatCat{
     0%{ transform:translateY(0px); }
-    50%{ transform:translateY(-20px); }
+    50%{ transform:translateY(-15px); }
     100%{ transform:translateY(0px); }
 }
 
 /* Her Video */
 .herVideo{
     position:absolute;
-    width:40%;
+    width:60%;
+    max-width:300px;
     left:50%;
     top:40%;
     transform:translate(-50%,-50%);
-    z-index:5;
+    z-index:15;
+    border-radius:10px;
 }
 
 /* Chaos text beneath her video */
 #chaosText{
     position:absolute;
-    top:60%;
-    left:50%;
-    transform:translateX(-50%);
-    width:90%;
-    max-width:500px;
+    top:65%;
+    width:100%;
     text-align:center;
-    font-size:22px;
+    font-size:18px;
     font-weight:bold;
     color:yellow;
-    padding:10px;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    hyphens: auto;
+    padding:0 20px;
+    box-sizing:border-box;
+    z-index:20;
 }
 
 /* Flash chaos effect */
@@ -122,167 +177,389 @@ button{
     opacity:0;
     pointer-events:none;
     animation:flashAnim 0.2s linear infinite;
+    z-index:999;
 }
 
 @keyframes flashAnim{
     0%{ opacity:0; }
-    50%{ opacity:0.08; }
+    50%{ opacity:0.1; }
     100%{ opacity:0; }
 }
 
 /* Confetti */
 .confetti{
     position:absolute;
-    width:10px;
-    height:10px;
+    width:8px;
+    height:8px;
     pointer-events:none;
     opacity:0.9;
     border-radius:50%;
-    animation:fall linear infinite;
+    animation:fall 3s linear infinite;
+    z-index:25;
 }
 
 @keyframes fall{
-    0%{ transform:translateY(0px) rotate(0deg); }
+    0%{ transform:translateY(-10px) rotate(0deg); }
     100%{ transform:translateY(100vh) rotate(360deg); }
 }
 
-/* Mobile font adjustment */
-@media screen and (max-width: 400px){
-    #chaosText{
-        font-size:18px;
-    }
+/* CONFESSION TEXT */
+#confession{
+    width:90%;
+    max-width:600px;
+    text-align:left;
+    font-size:18px;
+    line-height:1.6;
+    background:rgba(255,255,255,0.1);
+    padding:25px;
+    border-radius:15px;
+    color:#fff;
+    white-space:pre-wrap;
+    margin:20px auto;
+    max-height:70vh;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+}
+
+/* Secret Menu */
+#secretMenu h2 {
+    font-size:24px;
+    margin-bottom:20px;
+}
+
+/* Reflection text */
+.reflection-text {
+    position:absolute;
+    top:20%;
+    width:90%;
+    left:5%;
+    text-align:center;
+    font-size:20px;
+    color:white;
+    padding:20px;
+    box-sizing:border-box;
+    background:rgba(0,0,0,0.8);
+    border-radius:15px;
+    max-height:70vh;
+    overflow-y:auto;
+}
+
+.error-message {
+    color: #ff6b6b;
+    margin-top: 10px;
+    font-size: 14px;
 }
 </style>
 </head>
 
 <body>
+<!-- LOADING SCREEN -->
+<div id="loadingScreen">
+    <div class="loader"></div>
+    <div id="loadingText">Loading media files... (0/5)</div>
+    <div class="progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+    </div>
+    <div id="errorContainer" class="error-message"></div>
+</div>
 
 <!-- AUDIO -->
-<audio id="tap" src="tap.mp3"></audio>
-<audio id="meme" src="meme.mp3"></audio>
-<audio id="buri" src="buri.mp3"></audio>
+<audio id="tap" preload="auto"></audio>
+<audio id="meme" preload="auto"></audio>
 
 <!-- SECRET MENU -->
-<div id="secretMenu" class="screen">
-    <h2>Access secret menu?</h2>
-    <input type="password" id="codeInput" placeholder="Enter code">
+<div id="secretMenu" class="screen center">
+    <h2>🔐 Access secret menu?</h2>
+    <input type="password" id="codeInput" placeholder="Enter code" autocomplete="off">
     <button onclick="checkCode()">Enter</button>
     <button class="secondary" onclick="startMain()">Continue without code</button>
-    <div id="secretText"></div>
 </div>
 
 <!-- MAIN SCENE -->
-<div id="scene1" class="screen hidden">
-    <div id="textDisplay"></div>
+<div id="scene1" class="screen hidden"></div>
+
+<!-- CONFESSION SCREEN -->
+<div id="confessionScreen" class="screen hidden center">
+    <div id="confession"></div>
+    <button onclick="goBackToMain()" style="margin-top:20px; background:#666; color:white;">← Back</button>
 </div>
 
 <script>
-// Preload media
-const assets = ["tap.mp3","meme.mp3","buri.mp3","pixelcat.gif","vibing cat.gif","mbd.mp4"];
-assets.forEach(src=>{
-    let media;
-    if(src.endsWith(".mp4")) media = document.createElement("video");
-    else media = new Audio();
-    media.src = src;
-});
+// Media files list
+const mediaFiles = [
+    { type: 'audio', id: 'tap', src: 'tap.mp3' },
+    { type: 'audio', id: 'meme', src: 'meme.mp3' },
+    { type: 'video', src: 'mbd.mp4' },
+    { type: 'image', src: 'pixelcat.gif' },
+    { type: 'image', src: 'vibing cat.gif' }
+];
 
-// Play/pause functions
-function play(id){ let s=document.getElementById(id); if(s){ s.currentTime=0; s.play(); } }
-function stop(id){ let s=document.getElementById(id); if(s){ s.pause(); s.currentTime=0; } }
+let loadedCount = 0;
+let hasErrors = false;
 
-// Secret code check
-function checkCode(){
-    play("tap");
-    let code = document.getElementById("codeInput").value.trim().toLowerCase();
-    if(code==="labubu"){
-        const secretDiv = document.getElementById("secretText");
-        secretDiv.innerText = `Good job on deciphering that Caesar cipher! Now that you’re here, I want to talk about something important.
+function updateProgress() {
+    const percent = (loadedCount / mediaFiles.length) * 100;
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('loadingText').innerText = `Loading media files... (${loadedCount}/${mediaFiles.length})`;
+}
 
-Shall I get straight to the point? Or keep yapping?
-We’ll go straight to the point…
-
-Would you like to be my girlfriend?
-I really enjoy talking to you...I could listen to you for hours. I admire your curiosity and sense of humor. I know it would be long distance and that there might be some challenges, and I can’t promise everything will be perfect, but I will always try my best. I truly believe we can make it work if we both want to.
-
-Take all the time you need to decide. By the time you read this, I’ll probably be asleep, so I’d really appreciate it if you text me and let me know what you feel after reading. No rush, just wanted to say this out.
-
-And… that’s it. Menu closed.`;
-    } else {
-        alert("Wrong code");
+function mediaLoaded() {
+    loadedCount++;
+    updateProgress();
+    
+    if (loadedCount >= mediaFiles.length) {
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            // Secret menu is already visible, no need to show it again
+        }, 500);
     }
 }
 
-// Skip secret menu
-function startMain(){
+function mediaError(file) {
+    hasErrors = true;
+    console.error('Failed to load:', file.src);
+    document.getElementById('errorContainer').innerHTML += `⚠️ Missing: ${file.src}<br>`;
+    mediaLoaded(); // Count as loaded anyway to continue
+}
+
+// Preload all media
+mediaFiles.forEach(file => {
+    if (file.type === 'audio') {
+        let audio = document.getElementById(file.id);
+        if (audio) {
+            audio.src = file.src;
+            audio.addEventListener('canplaythrough', mediaLoaded);
+            audio.addEventListener('error', () => mediaError(file));
+            audio.load();
+        }
+    } else if (file.type === 'video') {
+        let video = document.createElement('video');
+        video.preload = 'auto';
+        video.src = file.src;
+        video.addEventListener('canplaythrough', mediaLoaded);
+        video.addEventListener('error', () => mediaError(file));
+        video.load();
+    } else if (file.type === 'image') {
+        let img = new Image();
+        img.src = file.src;
+        img.addEventListener('load', mediaLoaded);
+        img.addEventListener('error', () => mediaError(file));
+    }
+});
+
+// Audio functions
+function play(id) {
+    let s = document.getElementById(id);
+    if (s) {
+        s.currentTime = 0;
+        s.play().catch(e => console.log('Playback failed:', e));
+    }
+}
+
+function stop(id) {
+    let s = document.getElementById(id);
+    if (s) {
+        s.pause();
+        s.currentTime = 0;
+    }
+}
+
+// Code check
+function checkCode() {
     play("tap");
+    const code = document.getElementById("codeInput").value.trim().toLowerCase();
+    if (code === "labubu") {
+        // Hide secret menu and show confession
+        document.getElementById("secretMenu").classList.add("hidden");
+        showConfession();
+    } else {
+        startMain();
+    }
+}
+
+// Start main timeline
+function startMain() {
+    play("tap");
+    // Hide secret menu
     document.getElementById("secretMenu").classList.add("hidden");
+    // Show main scene
     document.getElementById("scene1").classList.remove("hidden");
+    // Hide confession screen just in case
+    document.getElementById("confessionScreen").classList.add("hidden");
     startTimeline();
 }
 
-// Timeline before chaos
-function startTimeline(){
-    let text=document.getElementById("textDisplay");
-    let years=20;
-    let seconds=years*365*24*60*60;
+// Timeline
+function startTimeline() {
+    const scene = document.getElementById("scene1");
+    scene.innerHTML = '<div id="textDisplay"></div>';
+    scene.style.background = "black";
+    
+    let text = document.getElementById("textDisplay");
+    let years = 20;
+    let seconds = years * 365 * 24 * 60 * 60;
 
-    text.innerText=`Now, you have been alive for ${years} years...`;
-    setTimeout(()=>{ text.innerText=`That is ${seconds.toLocaleString()} seconds...`; },3000);
-    setTimeout(()=>{ text.innerText=""; startChaos(); },6000);
+    text.innerText = `Now, you have been alive for ${years} years...`;
+    
+    setTimeout(() => {
+        text.innerText = `That is ${seconds.toLocaleString()} seconds...`;
+    }, 3000);
+
+    setTimeout(() => {
+        text.innerText = "";
+        startChaos();
+    }, 6000);
 }
 
-// Chaos function
-function startChaos(){
-    const scene=document.getElementById("scene1");
-    play("meme"); play("buri");
+// Chaos mode
+function startChaos() {
+    const scene = document.getElementById("scene1");
+    scene.innerHTML = '';
 
-    // Running cat
-    let run=document.createElement("img");
-    run.src="pixelcat.gif"; run.className="runningCat"; scene.appendChild(run);
+    // Play sounds
+    play("meme");
 
-    // Floating cats
-    for(let i=0;i<20;i++){
-        let cat=document.createElement("img");
-        cat.src=i%2===0?"pixelcat.gif":"vibing cat.gif";
-        cat.className="cat";
-        cat.style.left=Math.random()*90+"%";
-        cat.style.top=Math.random()*80+"%";
-        cat.style.animationDuration=(3+Math.random()*3)+"s";
+    // Running Cat
+    let run = document.createElement("img");
+    run.src = "pixelcat.gif";
+    run.className = "runningCat";
+    run.alt = "running cat";
+    run.onerror = function() { this.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 100 100"><text x="10" y="70" font-size="80">🐱</text></svg>'; };
+    scene.appendChild(run);
+
+    // Floating Cats
+    for (let i = 0; i <= 15; i++) {
+        let cat = document.createElement("img");
+        cat.src = i % 2 === 0 ? "pixelcat.gif" : "vibing cat.gif";
+        cat.className = "cat";
+        cat.style.left = Math.random() * 90 + "%";
+        cat.style.top = Math.random() * 80 + "%";
+        cat.style.animationDuration = (3 + Math.random() * 3) + "s";
+        cat.alt = "cat";
+        cat.onerror = function() { this.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 100 100"><text x="10" y="70" font-size="70">😺</text></svg>'; };
         scene.appendChild(cat);
     }
 
-    // Smaller video
-    let video=document.createElement("video");
-    video.src="mbd.mp4"; video.className="herVideo";
-    video.autoplay=true; video.loop=true; video.muted=true;
-    video.playbackRate=1.5; scene.appendChild(video);
+    // Video
+    let video = document.createElement("video");
+    video.src = "mbd.mp4";
+    video.className = "herVideo";
+    video.autoplay = true;
+    video.loop = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.playbackRate = 1.3;
+    video.onerror = function() {
+        this.outerHTML = '<div class="herVideo" style="background:#333; display:flex; align-items:center; justify-content:center; font-size:60px;">🎥</div>';
+    };
+    scene.appendChild(video);
 
     // Chaos text
-    let msg=document.createElement("div"); msg.id="chaosText"; scene.appendChild(msg);
-    const chaosContent = "Okay It Was Kinda Cringe But I Had To Do It 😂";
-    let index=0; let typing = setInterval(()=>{
-        if(index<chaosContent.length){ msg.innerText+=chaosContent[index]; index++; }
-        else clearInterval(typing);
-    },100);
+    let msg = document.createElement("div");
+    msg.id = "chaosText";
+    scene.appendChild(msg);
 
-    // Flash
-    let flash=document.createElement("div"); flash.className="flash"; document.body.appendChild(flash);
+    const textContent = "Okay It Was Kinda Cringe But I Had To Do It 😂";
+    let index = 0;
+    let typing = setInterval(() => {
+        if (index < textContent.length) {
+            msg.innerText += textContent[index];
+            index++;
+        } else {
+            clearInterval(typing);
+        }
+    }, 100);
+
+    // Flash effect
+    let flash = document.createElement("div");
+    flash.className = "flash";
+    document.body.appendChild(flash);
 
     // Confetti
-    const colors=["red","yellow","blue","green","orange","pink","purple"];
-    for(let i=0;i<50;i++){
-        let c=document.createElement("div");
-        c.className="confetti";
-        c.style.left=Math.random()*100+"%";
-        c.style.background=colors[Math.floor(Math.random()*colors.length)];
-        c.style.animationDuration=(2+Math.random()*3)+"s";
+    const colors = ["red", "yellow", "blue", "green", "orange", "pink", "purple"];
+    for (let i = 0; i < 40; i++) {
+        let c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = Math.random() * 100 + "%";
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.animationDuration = (2 + Math.random() * 3) + "s";
+        c.style.animationDelay = Math.random() * 2 + "s";
         scene.appendChild(c);
     }
 
-    setTimeout(()=>{ stop("meme"); stop("buri"); },13000);
-    setTimeout(()=>{ scene.innerHTML=""; flash.remove(); },15000);
-}
-</script>
+    // Stop sounds
+    setTimeout(() => {
+        stop("meme");
+    }, 13000);
 
+    // End chaos
+    setTimeout(() => {
+        scene.innerHTML = "";
+        if (flash && flash.parentNode) flash.remove();
+        startReflection();
+    }, 15000);
+}
+
+// Reflection
+function startReflection() {
+    const scene = document.getElementById("scene1");
+    scene.style.background = "#111";
+    
+    const text = document.createElement("div");
+    text.className = "reflection-text";
+    text.innerText = "But seriously…\n\nYou're 20 now.\nYour teenage years are officially over.\n\nHow does that feel?";
+    scene.appendChild(text);
+}
+
+// Confession
+function showConfession() {
+    play("tap");
+    document.getElementById("secretMenu").classList.add("hidden");
+    document.getElementById("scene1").classList.add("hidden");
+    document.getElementById("confessionScreen").classList.remove("hidden");
+
+    const confessionText = `Good job on deciphering that Caesar cipher! Now that you're here, I want to talk about something important.
+
+Shall I get straight to the point? Or keep yapping?
+We'll go straight to the point…
+
+Would you like to be my girlfriend?
+I really enjoy talking to you...I could listen to you for hours. We always get the perfect kinda mindsync moments those are fun. Now, I know it would be long distance and that there might be some challenges, and I can't promise everything will be perfect, but I will always try my best. I truly believe we can make it work if we both want to.
+
+Take all the time you need to decide. By the time you read this, I'll probably be asleep, so I'd really appreciate it if you text me and let me know what you feel after reading. No rush just wanted to say this out.
+
+And… that's it. Menu closed.`;
+
+    const confessionDiv = document.getElementById("confession");
+    confessionDiv.innerText = "";
+    let i = 0;
+    const typeWriter = setInterval(() => {
+        if (i < confessionText.length) {
+            confessionDiv.innerText += confessionText[i];
+            i++;
+        } else {
+            clearInterval(typeWriter);
+        }
+    }, 30);
+}
+
+// Back button
+function goBackToMain() {
+    play("tap");
+    document.getElementById("confessionScreen").classList.add("hidden");
+    document.getElementById("secretMenu").classList.remove("hidden");
+}
+
+// Fallback if loading takes too long
+setTimeout(() => {
+    if (loadedCount < mediaFiles.length) {
+        document.getElementById('errorContainer').innerHTML += '⚠️ Loading timeout - continuing anyway...<br>';
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            // Secret menu is already visible
+        }, 1000);
+    }
+}, 10000);
+</script>
 </body>
 </html>
